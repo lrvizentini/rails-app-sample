@@ -1,0 +1,24 @@
+[Unit]
+Description=My Blog App
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+#Group=iaas-api
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=rails-blob-webapp
+
+WorkingDirectory=/var/www/sites/blog/production
+EnvironmentFile=/var/www/sites/blog/production/env/rails-blog-webapp-production.env
+
+ExecStart=/usr/bin/bash -lc 'bundle exec puma -C config/puma.rb -e production'
+
+TimeoutSec=30
+RestartSec=15s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

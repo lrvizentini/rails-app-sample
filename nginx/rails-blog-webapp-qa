@@ -1,0 +1,51 @@
+upstream rails-webapp-main {
+    # Path to Puma SOCK file, as defined previously
+    server unix:/var/www/sites/blog/production/shared/sockets/puma.sock fail_timeout=0;
+}
+upstream rails-webapp-dev1 {
+    server unix:/var/www/sites/blog/dev1/shared/sockets/puma.sock fail_timeout=0;
+}
+upstream rails-webapp-dev2 {
+    server unix:/var/www/sites/blog/dev2/shared/sockets/puma.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name localhost;
+
+    root /var/www/sites/blog/production/public;
+
+    try_files $uri/index.html $uri @rails-webapp-main;
+
+    location @rails-webapp-main {
+        proxy_pass http://rails-webapp-main;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+    }
+
+    location /dev1 {
+        rewrite ^/dev1(.*) /$1 break;
+        root /var/www/sites/blog/dev1/public/;
+        proxy_pass         http://rails-webapp-dev1/;
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    }
+
+    location /dev2 {
+        rewrite ^/dev2(.*) /$1 break;
+        alias /var/www/sites/blog/dev2/public/;
+        proxy_pass         http://rails-webapp-dev2/;
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    }
+
+    error_page 500 502 503 504 /500.html;
+    client_max_body_size 4G;
+    keepalive_timeout 10;
+}
