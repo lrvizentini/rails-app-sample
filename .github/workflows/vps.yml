@@ -24,12 +24,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+      
       # Runs a single command using the runners shell
       - name: Bundle install
         run: |
-          gem install bundler
-          gem install rubocop
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 8 --retry 3
 
