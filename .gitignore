@@ -47,3 +47,6 @@ yarn-debug.log*
 #Tests
 /test-results
 /coverage
+
+#sockets
+/shared/sockets/*.sock
