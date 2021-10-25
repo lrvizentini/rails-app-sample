@@ -32,7 +32,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
-          script: host-scripts/install-ruby.sh
+          script: |
+              ls -la
+              sh host-scripts/install-ruby.sh
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.84.0
