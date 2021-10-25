@@ -27,10 +27,6 @@ jobs:
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.84.0
-        with:
-          # Engine and version to use, see the syntax in the README. Reads from .ruby-version or .tool-versions if unset.
-          ruby-version: 2.7
-          # bundler: # optional, default is default
           
       # Runs a single command using the runners shell
       - name: Bundle install
