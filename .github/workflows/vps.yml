@@ -36,7 +36,7 @@ jobs:
           source: "host-scripts/*.sh"
           target: "~/"
       
-      - name: executing remote ssh commands using password
+      - name: install pre-reqs
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -46,6 +46,7 @@ jobs:
           script: |
               ls -la
               sh ~/host-scripts/install-ruby.sh
+              sh ~/host-scripts/install-webserver.sh
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.84.0
