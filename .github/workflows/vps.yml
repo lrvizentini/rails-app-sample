@@ -34,7 +34,7 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           source: "host-scripts/*.sh"
-          target: "~/host-scripts/"
+          target: "~/"
       
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
