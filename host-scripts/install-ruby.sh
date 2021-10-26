@@ -5,7 +5,9 @@ sudo apt-get install -y --no-install-recommends tzdata ;
 
 sudo apt-get install -y --no-install-recommends git curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev libsqlite3-dev
 
-if ! [ -a ~/.rbenv ]; 
+rbenvPath=$(which rbenv)
+
+if [ -n "$rbenvPath" ]; 
 then 
     git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
@@ -16,10 +18,10 @@ then
     
     # reload file
     . ~/.bash_profile
-
     rbenv install -v 2.7.2
-    rbenv global 2.7.2
 fi
+
+rbenv global 2.7.2
 
 sudo apt-get install -y nodejs
 
