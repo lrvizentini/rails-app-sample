@@ -7,9 +7,9 @@ sudo apt-get install -y --no-install-recommends git curl zlib1g-dev build-essent
 
 rbenvPath=$(which rbenv)
 
-if ! [ -n "$rbenvPath" ]; 
-then 
-    
+if ! [ -n "$rbenvPath" ];
+then
+
     echo "init rbenv"
     git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
