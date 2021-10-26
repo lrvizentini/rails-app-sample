@@ -7,8 +7,10 @@ sudo apt-get install -y --no-install-recommends git curl zlib1g-dev build-essent
 
 rbenvPath=$(which rbenv)
 
-if [ -n "$rbenvPath" ]; 
+if ! [ -n "$rbenvPath" ]; 
 then 
+    
+    echo "init rbenv"
     git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
     echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
@@ -19,6 +21,7 @@ then
     # reload file
     . ~/.bash_profile
     rbenv install -v 2.7.2
+
 fi
 
 rbenv global 2.7.2
@@ -27,7 +30,8 @@ sudo apt-get install -y nodejs
 
 ruby -v
 
-if ! [ -a ~/.gemrc ]; 
+if ! [ -a ~/.gemrc ];
+then
     echo "gem: --no-document" > ~/.gemrc
 fi
 
