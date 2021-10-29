@@ -61,7 +61,16 @@ jobs:
       - name: Run a multi-line script
         run: |
           bundle exec rake db:migrate RAILS_ENV=test
-          bundle exec rspec --format RspecJunitFormatter --out test-results/test-rspec.xml
+          #bundle exec rspec --format RspecJunitFormatter --out test-results/test-rspec.xml
           #rubocop --format json --out test-results/rubocop.json
           
+      - name: copy files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          source: "**/*,!.git/**/*,!.bundle/**/*,!.scannerwork/**/*,!coverage/**/*,!test-results/**/*,!install-host/**/*,!test/**/*"
+          target: "/var/www/sites/blob/production"
       
