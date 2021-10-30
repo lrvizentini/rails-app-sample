@@ -4,7 +4,7 @@ gem install puma
 
 homedir=/var/www/sites/blog
 user=ubuntu
-# sudo mkdir -p $homedir
+sudo mkdir -p $homedir
 
 
 sudo chown -R $user $homedir
