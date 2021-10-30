@@ -24,6 +24,8 @@ jobs:
       APP_NAME: "blog"
       SLOT: "production"
       ACTIONS_RUNNER_DEBUG: "true"
+      NGINX_PATH: "/etc/nginx"
+      NGINX_SERVICENAME: "production"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -65,6 +67,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           bundle exec rake db:migrate RAILS_ENV=test
+          whoami
           #bundle exec rspec --format RspecJunitFormatter --out test-results/test-rspec.xml
           #rubocop --format json --out test-results/rubocop.json
           
@@ -100,10 +103,10 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            echo 'Copy NGINX config file: sudo cp $APP_NAME/nginx/rails-blog-webapp-$(NGINX.ServiceName) $(NGINX.Path)/sites-available/rails-blog-webapp-$(NGINX.ServiceName)'
-            sudo cp $APP_NAME/nginx/rails-blog-webapp-$(NGINX.ServiceName) $(NGINX.Path)/sites-available/rails-blog-webapp-$(NGINX.ServiceName)
+            echo 'Copy NGINX config file: sudo cp $APP_NAME/nginx/rails-blog-webapp-NGINX_SERVICENAME NGINX_PATH/sites-available/rails-blog-webapp-NGINX_SERVICENAME'
+            sudo cp $APP_NAME/nginx/rails-blog-webapp-NGINX_SERVICENAME NGINX_PATH/sites-available/rails-blog-webapp-NGINX_SERVICENAME
             echo ' Copy config OK'
             echo 'Enabling the website'
-            sudo ln -s -f /etc/nginx/sites-available/rails-blog-webapp-$(NGINX.ServiceName) /etc/nginx/sites-enabled/
+            sudo ln -s -f /etc/nginx/sites-available/rails-blog-webapp-NGINX_SERVICENAME /etc/nginx/sites-enabled/
             echo 'reload nginx with: nginx -s reload'
             sudo nginx -s reload
