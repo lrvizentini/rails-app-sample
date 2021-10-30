@@ -79,7 +79,7 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           source: "**/*,!.git/**/*,!.bundle/**/*,!.scannerwork/**/*,!coverage/**/*,!test-results/**/*,!install-host/**/*,!test/**/*"
-          target: "/var/www/sites/$APP_NAME/$SLOT"
+          target: "~/blob"
       
       - name: Install Services
         uses: appleboy/ssh-action@master
