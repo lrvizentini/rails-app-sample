@@ -55,6 +55,8 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.84.0
+        # with:
+        #   bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     
       # Runs a single command using the runners shell
       - name: Bundle install
