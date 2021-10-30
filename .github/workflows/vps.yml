@@ -16,6 +16,10 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
+  env:
+    APP_NAME: "blog"
+    SLOT: "production"
+    ACTIONS_RUNNER_DEBUG: true
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -72,5 +76,22 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           source: "**/*,!.git/**/*,!.bundle/**/*,!.scannerwork/**/*,!coverage/**/*,!test-results/**/*,!install-host/**/*,!test/**/*"
-          target: "/var/www/sites/blob/production"
+          target: "/var/www/sites/$APP_NAME/$SLOT"
       
+      - name: Install Service
+        run: |
+          echo 'Managing service for: rails-blog-webapp-$SLOT.service'
+          sudo systemctl stop rails-blog-webapp-$SLOT.service
+          sudo systemctl enable $APP_NAME/services/rails-blog-webapp-$SLOT.service
+          sudo systemctl start rails-blog-webapp-$SLOT.service
+        
+      
+      - name: Install nginx
+        run: |
+          echo 'Copy NGINX config file: sudo cp $APP_NAME/nginx/rails-blog-webapp-$(NGINX.ServiceName) $(NGINX.Path)/sites-available/rails-blog-webapp-$(NGINX.ServiceName)'
+          sudo cp $APP_NAME/nginx/rails-blog-webapp-$(NGINX.ServiceName) $(NGINX.Path)/sites-available/rails-blog-webapp-$(NGINX.ServiceName)
+          echo ' Copy config OK'
+          echo 'Enabling the website'
+          sudo ln -s -f /etc/nginx/sites-available/rails-blog-webapp-$(NGINX.ServiceName) /etc/nginx/sites-enabled/
+          echo 'reload nginx with: nginx -s reload'
+          sudo nginx -s reload
