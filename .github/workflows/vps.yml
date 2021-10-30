@@ -31,7 +31,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
@@ -56,7 +55,7 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.84.0
-          
+    
       # Runs a single command using the runners shell
       - name: Bundle install
         run: |
@@ -78,8 +77,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          source: "**/*,!.git/**/*,!.bundle/**/*,!.scannerwork/**/*,!coverage/**/*,!test-results/**/*,!install-host/**/*,!test/**/*"
-          target: "~/blob"
+          source: "/**/*,!.git/**/*,!.bundle/**/*,!.scannerwork/**/*,!coverage/**/*,!test-results/**/*,!install-host/**/*,!test/**/*"
+          target: "/var/"
       
       - name: Install Services
         uses: appleboy/ssh-action@master
@@ -89,6 +88,7 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cd /var/www/sites/blog/production/
             echo 'Managing service for: rails-blog-webapp-$SLOT.service'
             sudo systemctl stop rails-blog-webapp-$SLOT.service
             sudo systemctl enable $APP_NAME/services/rails-blog-webapp-$SLOT.service
@@ -103,10 +103,10 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            echo 'Copy NGINX config file: sudo cp $APP_NAME/nginx/rails-blog-webapp-NGINX_SERVICENAME NGINX_PATH/sites-available/rails-blog-webapp-NGINX_SERVICENAME'
-            sudo cp $APP_NAME/nginx/rails-blog-webapp-NGINX_SERVICENAME NGINX_PATH/sites-available/rails-blog-webapp-NGINX_SERVICENAME
+            echo 'Copy NGINX config file: sudo cp $APP_NAME/nginx/rails-blog-webapp-$NGINX_SERVICENAME $NGINX_PATH/sites-available/rails-blog-webapp-$NGINX_SERVICENAME'
+            sudo cp $APP_NAME/nginx/rails-blog-webapp-$NGINX_SERVICENAME $NGINX_PATH/sites-available/rails-blog-webapp-$NGINX_SERVICENAME
             echo ' Copy config OK'
             echo 'Enabling the website'
-            sudo ln -s -f /etc/nginx/sites-available/rails-blog-webapp-NGINX_SERVICENAME /etc/nginx/sites-enabled/
+            sudo ln -s -f /etc/nginx/sites-available/rails-blog-webapp-$NGINX_SERVICENAME /etc/nginx/sites-enabled/
             echo 'reload nginx with: nginx -s reload'
             sudo nginx -s reload
